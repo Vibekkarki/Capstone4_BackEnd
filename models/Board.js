@@ -15,6 +15,10 @@ const BoardSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  status: {
+    type: String,
+    default: "active",
+  },
 });
 
 module.exports = mongoose.model("Board", BoardSchema);
