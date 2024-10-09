@@ -6,6 +6,11 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
 
+  // Validate the input
+  if (!username || !email || !password) {
+    return res.status(400).json({ msg: "Please provide all fields" });
+  }
+
   try {
     // Check if the user already exists
     let user = await User.findOne({ username });
@@ -35,7 +40,8 @@ router.post("/login", async (req, res) => {
 
   try {
     const user = await User.findOne({ username });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+
+    if (!user || !bcrypt.compare(password, user.password)) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
