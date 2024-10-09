@@ -7,12 +7,11 @@ module.exports = router;
 
 router.get("/boards", async (req, res) => {
   try {
-    // Create a new board
     const boards = await Board.find({
       status: "active",
     });
     if (boards.length === 0) {
-      return res.status(404).json({ msg: "No active boards found" });
+      return res.status(404).json({ msg: "No active boards found." });
     }
     res.status(201).json({ boards: boards });
   } catch (error) {
@@ -26,14 +25,12 @@ router.post("/board/create", async (req, res) => {
 
   try {
     if (user) {
-      // Create a new board
       const board = new Board({
         owner_id: user._id,
         name: name,
         description: description,
       });
 
-      // Save the board to the database
       await board.save();
       res.status(201).json({ msg: "Board created successfully." });
     } else {
@@ -46,7 +43,6 @@ router.post("/board/create", async (req, res) => {
 
 router.get("/board/:boardId", async (req, res) => {
   try {
-    // Get a board
     const board = await Board.findById(req.params.boardId);
     if (!board) {
       return res.status(404).json({ msg: "Board not found" });
@@ -64,7 +60,6 @@ router.post("/board/update/:boardId", async (req, res) => {
 
   try {
     if (board && board.status == "active") {
-      // update a board
       board.name = name;
       board.description = description;
       await board.save();
@@ -82,7 +77,6 @@ router.post("/board/close/:boardId", async (req, res) => {
 
   try {
     if (board && board.status == "active") {
-      // close a board
       board.status = "inactive";
       await board.save();
       res.status(201).json({ msg: "Board closed successfully." });

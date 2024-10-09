@@ -6,26 +6,20 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
 
-  // Validate the input
   if (!username || !email || !password) {
     return res.status(400).json({ msg: "Please provide all fields" });
   }
 
   try {
-    // Check if the user already exists
     let user = await User.findOne({ username });
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
     }
-
-    // Create a new user with a hashed password
     user = new User({
       username,
       email,
-      password: await bcrypt.hash(password, 10),
+      password: password,
     });
-
-    // Save the user to the database
     await user.save();
     res.status(201).json({ msg: "User registered successfully" });
   } catch (error) {
@@ -34,26 +28,34 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
     const user = await User.findOne({ username });
 
-    if (!user || !bcrypt.compare(password, user.password)) {
+    if (user) {
+      bcrypt.compare(password, user.password, (error, same) => {
+        if (error) {
+          return res.status(500).json({ msg: "Server error" });
+        }
+
+        if (same) {
+          // Store user info in session
+          req.session.userId = user._id;
+          res.json({ msg: "Login successful", userId: user._id });
+        } else {
+          return res.status(400).json({ msg: "Invalid credentials" });
+        }
+      });
+    } else {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
-
-    // Store user info in session
-    req.session.userId = user._id;
-    res.json({ msg: "Login successful", userId: user._id });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
   }
 });
 
-// Logout
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
