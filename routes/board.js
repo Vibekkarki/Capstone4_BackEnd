@@ -11,6 +11,9 @@ router.get("/boards", async (req, res) => {
     const boards = await Board.find({
       status: "active",
     });
+    if (boards.length === 0) {
+      return res.status(404).json({ msg: "No active boards found" });
+    }
     res.status(201).json({ boards: boards });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
@@ -45,6 +48,9 @@ router.get("/board/:boardId", async (req, res) => {
   try {
     // Get a board
     const board = await Board.findById(req.params.boardId);
+    if (!board) {
+      return res.status(404).json({ msg: "Board not found" });
+    }
     res.status(201).json({ board: board });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
