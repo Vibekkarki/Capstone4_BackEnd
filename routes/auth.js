@@ -11,7 +11,7 @@ router.post("/register", async (req, res) => {
   }
 
   try {
-    let user = await User.findOne({ username });
+    let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
     }
@@ -29,10 +29,10 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
 
     if (user) {
       bcrypt.compare(password, user.password, (error, same) => {
@@ -63,6 +63,37 @@ router.post("/logout", (req, res) => {
     }
     res.json({ msg: "Logout successful" });
   });
+});
+
+router.post("/forgot-password", async (req, res) => {
+  const { email, new_password, confirm_password } = req.body;
+
+  if (!email || !new_password || !confirm_password) {
+    return res.status(400).json({
+      msg: "Please provide all fields.",
+    });
+  }
+
+  if (new_password !== confirm_password) {
+    return res.status(400).json({ msg: "Passwords do not match" });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ msg: "User with this email does not exist" });
+    }
+
+    user.password = new_password;
+    await user.save();
+
+    res.json({ msg: "Password has been updated successfully" });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 
 module.exports = router;
