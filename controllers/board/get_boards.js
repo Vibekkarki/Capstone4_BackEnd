@@ -1,12 +1,26 @@
 const Board = require("../../models/board");
 const User = require("../../models/user");
+const BoardMember = require("../../models/BoardMember");
+
 module.exports = async (req, res) => {
   try {
     const user = await User.findById(req.session.userId);
-    const boards = await Board.find({
+    const ownedBoards = await Board.find({
       owner_id: user._id,
       status: "active",
     });
+
+    const memberBoards = await BoardMember.find({
+      $or: [{ user_id: user._id }, { invite_email: user.email }],
+    }).populate("board_id");
+
+    const boards = [
+      ...ownedBoards,
+      ...memberBoards
+        .map((bm) => bm.board_id)
+        .filter((board) => board.status === "active"),
+    ];
+
     // if (boards.length === 0) {
     //   return res.status(400).json({ msg: "No active boards found." });
     // }

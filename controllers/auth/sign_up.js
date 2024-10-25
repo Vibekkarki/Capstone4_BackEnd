@@ -1,4 +1,5 @@
 const User = require("../../models/user");
+const BoardMember = require("../../models/BoardMember");
 
 module.exports = async (req, res) => {
   const { username, email, password } = req.body;
@@ -18,6 +19,12 @@ module.exports = async (req, res) => {
       password: password,
     });
     await user.save();
+
+    await BoardMember.updateMany(
+      { invite_email: email },
+      { $set: { user_id: user._id }, $unset: { invite_email: "" } }
+    );
+
     res.status(200).json({ msg: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
