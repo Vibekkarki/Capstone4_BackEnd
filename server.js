@@ -19,11 +19,18 @@ mongoose
 //Middleware
 const authMiddleware = require("./middleware/authMiddleware");
 
-//Controller
+//Auth Controller
 const register = require("./controllers/auth/sign_up");
 const login = require("./controllers/auth/sign_in");
 const logout = require("./controllers/auth/logout");
 const forgotPassword = require("./controllers/auth/forget_password");
+
+//Board Controller
+const getBoards = require("./controllers/board/get_boards");
+const createBoard = require("./controllers/board/create_board");
+const selectBoard = require("./controllers/board/select_board");
+const updateBoard = require("./controllers/board/update_board");
+const closeBoard = require("./controllers/board/close_board");
 
 app.use(cors());
 app.use(
@@ -40,6 +47,13 @@ app.post("/api/auth/register", register);
 app.post("/api/auth/login", login);
 app.post("/api/auth/logout", logout);
 app.post("/api/auth/forgot-password", forgotPassword);
+
+// Board API
+app.get("/api/boards", authMiddleware, getBoards);
+app.post("/api/board/create", authMiddleware, createBoard);
+app.get("/api/board/:boardId", authMiddleware, selectBoard);
+app.post("/api/update/:boardId", authMiddleware, updateBoard);
+app.post("/api/close/:boardId", authMiddleware, closeBoard);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

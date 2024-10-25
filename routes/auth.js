@@ -21,7 +21,7 @@
 //       password: password,
 //     });
 //     await user.save();
-//     res.status(201).json({ msg: "User registered successfully" });
+//     res.status(200).json({ msg: "User registered successfully" });
 //   } catch (error) {
 //     console.error("Registration error:", error);
 //     res.status(500).json({ msg: "Server error" });
