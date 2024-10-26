@@ -32,6 +32,9 @@ const selectBoard = require("./controllers/board/select_board");
 const updateBoard = require("./controllers/board/update_board");
 const closeBoard = require("./controllers/board/close_board");
 
+//BoardMember Controller
+const createBoardMember = require("./controllers/boardMember/create_board_member");
+
 app.use(cors());
 app.use(
   session({
@@ -54,6 +57,9 @@ app.post("/api/board/create", authMiddleware, createBoard);
 app.get("/api/board/:boardId", authMiddleware, selectBoard);
 app.post("/api/update/:boardId", authMiddleware, updateBoard);
 app.post("/api/close/:boardId", authMiddleware, closeBoard);
+
+// BoardMember API
+app.post("/api/board-member/create", authMiddleware, createBoardMember);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
