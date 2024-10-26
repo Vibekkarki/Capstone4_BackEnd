@@ -8,12 +8,11 @@ const TaskSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   position: {
     type: Number,
     default: 0,
   },
 });
-
+TaskSchema.index({ board_id: 1, name: 1 }, { unique: true });
 module.exports = mongoose.model("Task", TaskSchema);

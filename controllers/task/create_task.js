@@ -1,5 +1,7 @@
 const Board = require("../../models/board");
 const Task = require("../../models/Task");
+const BoardMember = require("../../models/BoardMember");
+
 module.exports = async (req, res) => {
   const { boardId, name, position } = req.body;
 
