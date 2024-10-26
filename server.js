@@ -35,6 +35,13 @@ const closeBoard = require("./controllers/board/close_board");
 //BoardMember Controller
 const createBoardMember = require("./controllers/boardMember/create_board_member");
 
+//Task Controller
+const getTasks = require("./controllers/task/get_tasks");
+const createTask = require("./controllers/task/create_task");
+const selectTask = require("./controllers/task/select_task");
+const updateTask = require("./controllers/task/update_task");
+const deleteTask = require("./controllers/task/delete_task");
+
 app.use(cors());
 app.use(
   session({
@@ -55,11 +62,18 @@ app.post("/api/auth/forgot-password", forgotPassword);
 app.get("/api/boards", authMiddleware, getBoards);
 app.post("/api/board/create", authMiddleware, createBoard);
 app.get("/api/board/:boardId", authMiddleware, selectBoard);
-app.post("/api/update/:boardId", authMiddleware, updateBoard);
-app.post("/api/close/:boardId", authMiddleware, closeBoard);
+app.post("/api/board/update/:boardId", authMiddleware, updateBoard);
+app.post("/api/board/close/:boardId", authMiddleware, closeBoard);
 
 // BoardMember API
 app.post("/api/board-member/create", authMiddleware, createBoardMember);
+
+// Task API
+app.get("/api/tasks/:boardId", authMiddleware, getTasks);
+app.post("/api/task/create", authMiddleware, createTask);
+app.get("/api/task/:taskId", authMiddleware, selectTask);
+app.post("/api/task/update/:taskId", authMiddleware, updateTask);
+app.post("/api/task/delete/:taskId", authMiddleware, deleteTask);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
