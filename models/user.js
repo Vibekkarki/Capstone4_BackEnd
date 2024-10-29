@@ -15,11 +15,19 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpire: {
+    type: Date,
+    default: null,
+  },
 });
 
 UserSchema.pre("save", function (next) {
   const user = this;
-  if (!user.isModified("password")) {
+  if (!user.isModified("password") || user.resetInProgress) {
     return next();
   }
 

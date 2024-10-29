@@ -24,6 +24,7 @@ const register = require("./controllers/auth/sign_up");
 const login = require("./controllers/auth/sign_in");
 const logout = require("./controllers/auth/logout");
 const forgotPassword = require("./controllers/auth/forget_password");
+const resetPassword = require("./controllers/auth/reset_password");
 
 //Board Controller
 const getBoards = require("./controllers/board/get_boards");
@@ -57,6 +58,7 @@ app.post("/api/auth/register", register);
 app.post("/api/auth/login", login);
 app.post("/api/auth/logout", logout);
 app.post("/api/auth/forgot-password", forgotPassword);
+app.post("/api/auth/reset-password/:token", resetPassword);
 
 // Board API
 app.get("/api/boards", authMiddleware, getBoards);

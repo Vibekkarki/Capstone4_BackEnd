@@ -1,30 +1,32 @@
+const crypto = require("crypto");
 const User = require("../../models/user");
 
 module.exports = async (req, res) => {
-  const { email, new_password, confirm_password } = req.body;
+  const { email } = req.body;
 
-  if (!email || !new_password || !confirm_password) {
-    return res.status(400).json({
-      msg: "Please provide all fields.",
-    });
-  }
-
-  if (new_password !== confirm_password) {
-    return res.status(400).json({ msg: "Passwords do not match" });
+  if (!email) {
+    return res.status(400).json({ msg: "Please provide an email address" });
   }
 
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res
-        .status(400)
-        .json({ msg: "User with this email does not exist" });
+      return res.status(400).json({ msg: "User with this email does not exist" });
     }
 
-    user.password = new_password;
+    // Generate token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenExpire = Date.now() + 3600000; // Token expires in 1 hour
+
+    // Store token and expiration in user document
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpire = resetTokenExpire;
     await user.save();
 
-    res.status(200).json({ msg: "Password has been updated successfully" });
+    // Generate reset link
+    const resetUrl = `http://localhost:5000/api/auth/reset-password/${resetToken}`;
+    
+    res.status(200).json({ msg: "Password reset link generated", resetUrl });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
   }
