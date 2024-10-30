@@ -43,6 +43,13 @@ const selectTask = require("./controllers/task/select_task");
 const updateTask = require("./controllers/task/update_task");
 const deleteTask = require("./controllers/task/delete_task");
 
+//Card Controller
+const getCards = require("./controllers/card/get_cards");
+const createCard = require("./controllers/card/create_card");
+const selectCard = require("./controllers/card/select_card");
+const updateCard = require("./controllers/card/update_card");
+const deleteCard = require("./controllers/card/delete_card");
+
 app.use(cors());
 app.use(
   session({
@@ -76,6 +83,13 @@ app.post("/api/task/create", authMiddleware, createTask);
 app.get("/api/task/:taskId", authMiddleware, selectTask);
 app.post("/api/task/update/:taskId", authMiddleware, updateTask);
 app.post("/api/task/delete/:taskId", authMiddleware, deleteTask);
+
+// Card API
+app.get("/api/cards/:taskId", authMiddleware, getCards);
+app.post("/api/card/create", authMiddleware, createCard);
+app.get("/api/card/:cardId", authMiddleware, selectCard);
+app.post("/api/card/update/:cardId", authMiddleware, updateCard);
+app.post("/api/card/delete/:cardId", authMiddleware, deleteCard);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
