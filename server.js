@@ -91,7 +91,7 @@ app.post("/api/task/update/:taskId", authMiddleware, updateTask);
 app.post("/api/task/delete/:taskId", authMiddleware, deleteTask);
 
 // Card API
-app.get("/api/cards/:taskId", authMiddleware, getCards);
+app.get("/api/cards/:boardId", authMiddleware, getCards);
 app.post("/api/card/create", authMiddleware, createCard);
 app.get("/api/card/:cardId", authMiddleware, selectCard);
 app.post("/api/card/update/:cardId", authMiddleware, updateCard);
