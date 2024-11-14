@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const CardSchema = new mongoose.Schema({
-  task_id: {
+  board_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Task",
+    ref: "Board",
     required: true,
   },
   title: {
@@ -24,6 +24,6 @@ const CardSchema = new mongoose.Schema({
   },
 });
 
-CardSchema.index({ task_id: 1, position: 1 }, { unique: true });
+// CardSchema.index({ task_id: 1, position: 1 }, { unique: true });
 
 module.exports = mongoose.model("Card", CardSchema);
