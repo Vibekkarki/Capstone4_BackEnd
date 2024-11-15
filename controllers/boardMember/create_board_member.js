@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
       newBoardMember.invite_email = email;
     }
     await newBoardMember.save();
-    // await sendInvitationEmail(email, board.name);
+    await sendInvitationEmail(email, board.name);
     res.status(200).json({ msg: "Board member added successfully." });
   } catch (error) {
     console.log(error);
@@ -43,23 +43,33 @@ module.exports = async (req, res) => {
   }
 };
 
-// async function sendInvitationEmail(email, boardName) {
-//   const transporter = nodemailer.createTransport({
-//     service: "Gmail", // or use another email provider
-//     auth: {
-//       user: "hanipatel090@gmail.com", // your email address
-//       pass: "DoH@rdWorkT0GetSuccess", // your email password
-//     },
-//   });
+async function sendInvitationEmail(email, boardName) {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: "hanipatel090@gmail.com",
+      pass: "ecxv jbkh ukck vhwq",
+    },
+    tls: {
+      rejectUnauthorized: false, 
+    },
+  });
 
-//   const mailOptions = {
-//     from: "hanipatel090@gmail.com",
-//     to: email,
-//     subject: `Invitation to join board: ${boardName}`,
-//     text: `You have been invited to join the board "${boardName}". Please log in to accept this invitation and view the board.`,
-//     html: `<p>You have been invited to join the board "<strong>${boardName}</strong>".</p>
-//            <p>Please <a href="https://yourapp.com/login">log in</a> to accept this invitation and view the board.</p>`,
-//   };
+  const mailOptions = {
+    from: "hanipatel090@gmail.com",
+    to: email,
+    subject: `Invitation to join board: ${boardName}`,
+    text: `You have been invited to join the board "${boardName}". Please log in to accept this invitation and view the board.`,
+    html: `<p>You have been invited to join the board "<strong>${boardName}</strong>".</p>
+           <p>Please log in to accept this invitation and view the board.</p>`,
+  };
 
-//   await transporter.sendMail(mailOptions);
-// }
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Invitation email sent to ${email}`);
+  } catch (error) {
+    console.error("Error sending invitation email:", error);
+  }
+}
