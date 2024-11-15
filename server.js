@@ -19,6 +19,9 @@ mongoose
 //Middleware
 const authMiddleware = require("./middleware/authMiddleware");
 
+//Dashboard Controller
+const getDataCount = require("./controllers/dashboard/get_data_count");
+
 //Auth Controller
 const register = require("./controllers/auth/sign_up");
 const login = require("./controllers/auth/sign_in");
@@ -66,6 +69,9 @@ app.post("/api/auth/login", login);
 app.post("/api/auth/logout", logout);
 app.post("/api/auth/forgot-password", forgotPassword);
 app.post("/api/auth/reset-password/:token", resetPassword);
+
+// Dashboard API
+app.get("/api/dashboard", authMiddleware, getDataCount);
 
 // Board API
 app.get("/api/boards", authMiddleware, getBoards);
