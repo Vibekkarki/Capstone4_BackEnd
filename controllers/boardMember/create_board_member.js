@@ -4,9 +4,9 @@ const BoardMember = require("../../models/BoardMember");
 const nodemailer = require("nodemailer");
 
 module.exports = async (req, res) => {
-  const { boardId, email, role } = req.body;
+  const { boardId, email } = req.body;
 
-  if (!boardId || !email || !role) {
+  if (!boardId || !email) {
     return res.status(400).json({ msg: "Please provide all fields" });
   }
 
@@ -24,9 +24,20 @@ module.exports = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
+
+    const existingMember = await BoardMember.findOne({
+      board_id: boardId,
+      $or: [{ user_id: user ? user._id : null }, { invite_email: email }],
+    });
+
+    if (existingMember) {
+      return res
+        .status(400)
+        .json({ msg: "This member is already invited to the board." });
+    }
+
     const newBoardMember = new BoardMember({
       board_id: board._id,
-      role,
     });
 
     if (user) {
@@ -38,7 +49,6 @@ module.exports = async (req, res) => {
     await sendInvitationEmail(email, board.name);
     res.status(200).json({ msg: "Board member added successfully." });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ msg: "Server error" });
   }
 };
@@ -53,7 +63,7 @@ async function sendInvitationEmail(email, boardName) {
       pass: "ecxv jbkh ukck vhwq",
     },
     tls: {
-      rejectUnauthorized: false, 
+      rejectUnauthorized: false,
     },
   });
 
