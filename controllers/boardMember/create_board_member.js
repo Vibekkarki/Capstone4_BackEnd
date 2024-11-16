@@ -47,7 +47,9 @@ module.exports = async (req, res) => {
     }
     await newBoardMember.save();
     await sendInvitationEmail(email, board.name);
-    res.status(200).json({ msg: "Board member added successfully." });
+    res
+      .status(200)
+      .json({ msg: "Board member added successfully.", newBoardMember });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
   }

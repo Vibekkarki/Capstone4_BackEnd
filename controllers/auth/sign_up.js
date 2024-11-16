@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
       { $set: { user_id: user._id } }
     );
 
-    res.status(200).json({ msg: "User registered successfully" });
+    res.status(200).json({ msg: "User registered successfully", user });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
   }

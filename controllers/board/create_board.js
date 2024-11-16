@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
       });
 
       await board.save();
-      res.status(200).json({ msg: "Board created successfully." });
+      res.status(200).json({ msg: "Board created successfully.", board });
     } else {
       return res.status(400).json({ msg: "Please sign in to create a board." });
     }
