@@ -14,10 +14,6 @@ const BoardMemberSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Board",
   },
-  role: {
-    type: String,
-    enum: ["ProjectManager", "Developer", "TeamLeader", "Designer", "Tester"],
-  },
 });
 
 module.exports = mongoose.model("BoardMember", BoardMemberSchema);

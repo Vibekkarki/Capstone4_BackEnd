@@ -9,7 +9,11 @@ module.exports = async (req, res) => {
       board.name = name;
       board.description = description;
       await board.save();
-      res.status(200).json({ msg: "Board updated successfully." });
+      const updatedBoard = await Board.findById(req.params.boardId);
+
+      res
+        .status(200)
+        .json({ msg: "Board updated successfully.", updatedBoard });
     } else {
       return res.status(400).json({ msg: "Board is not available" });
     }

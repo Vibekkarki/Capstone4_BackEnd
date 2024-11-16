@@ -22,10 +22,10 @@ module.exports = async (req, res) => {
 
     await BoardMember.updateMany(
       { invite_email: email },
-      { $set: { user_id: user._id }, $unset: { invite_email: "" } }
+      { $set: { user_id: user._id } }
     );
 
-    res.status(200).json({ msg: "User registered successfully" });
+    res.status(200).json({ msg: "User registered successfully", user });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
   }

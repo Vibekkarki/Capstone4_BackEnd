@@ -38,6 +38,7 @@ const closeBoard = require("./controllers/board/close_board");
 
 //BoardMember Controller
 const createBoardMember = require("./controllers/boardMember/create_board_member");
+const getBoardMembers = require("./controllers/boardMember/get_board_members");
 
 //Task Controller
 const getTasks = require("./controllers/task/get_tasks");
@@ -82,6 +83,7 @@ app.post("/api/board/close/:boardId", authMiddleware, closeBoard);
 
 // BoardMember API
 app.post("/api/board-member/create", authMiddleware, createBoardMember);
+app.get("/api/board-members/:boardId", authMiddleware, getBoardMembers);
 
 // Task API
 app.get("/api/tasks/:boardId", authMiddleware, getTasks);

@@ -4,21 +4,15 @@ const BoardMember = require("../../models/BoardMember");
 
 module.exports = async (req, res) => {
   const { cardId } = req.params;
-  const { title, description, dueDate } = req.body;
+  const { title, description, dueDate, assign_to } = req.body;
 
-  // Validate required fields
-  if (!title) {
+  if (!title || !description || !assign_to) {
     return res.status(400).json({ msg: "Please provide all required fields" });
   }
 
-  // Validate position as a positive number
-  // if (typeof position !== "number" || position < 0) {
-  //   return res.status(400).json({ msg: "Position must be a positive number" });
-  // }
-
   try {
     const userId = req.session.userId;
-    const card = await Card.findById(cardId).populate("board_id");
+    const card = await Card.findById(cardId);
 
     if (!card) {
       return res.status(404).json({ msg: "Card not found" });
@@ -35,15 +29,32 @@ module.exports = async (req, res) => {
       return res.status(403).json({ msg: "Unauthorized to update this card" });
     }
 
+    const isBoardMember = await BoardMember.exists({
+      board_id: board._id,
+      user_id: assign_to,
+    });
+
+    if (!isBoardMember) {
+      return res.status(400).json({
+        msg: "User must be a board member to be assigned to this card.",
+      });
+    }
+
     // Update fields in the card
     card.title = title;
-    card.description = description || card.description;
-    card.dueDate = dueDate || card.dueDate;
-    // card.position = position;
+    card.description = description ? description : null;
+    card.dueDate = dueDate ? new Date(dueDate) : null;
+    card.assign_to = assign_to;
 
     await card.save();
 
-    res.status(200).json({ msg: "Card updated successfully", card });
+    const updatedCard = await Card.findById(cardId)
+      .populate("board_id")
+      .populate("assign_to", "username email");
+
+    res
+      .status(200)
+      .json({ msg: "Card updated successfully", card: updatedCard });
   } catch (error) {
     res.status(500).json({ msg: "Server error" });
   }

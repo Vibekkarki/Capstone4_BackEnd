@@ -22,6 +22,11 @@ const CardSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  assign_to: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: false,
+  },
 });
 
 // CardSchema.index({ task_id: 1, position: 1 }, { unique: true });
