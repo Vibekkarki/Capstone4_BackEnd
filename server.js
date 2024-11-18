@@ -16,8 +16,29 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-//Middleware
+// Middleware
 const authMiddleware = require("./middleware/authMiddleware");
+
+// CORS Configuration
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+app.use(
+  session({
+    secret: "capstone4_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    },
+  })
+);
 
 //Dashboard Controller
 const getDataCount = require("./controllers/dashboard/get_data_count");
@@ -54,16 +75,6 @@ const selectCard = require("./controllers/card/select_card");
 const updateCard = require("./controllers/card/update_card");
 const deleteCard = require("./controllers/card/delete_card");
 
-app.use(cors());
-app.use(
-  session({
-    secret: "capstone4_secret_key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
-  })
-);
-
 // Authentication API
 app.post("/api/auth/register", register);
 app.post("/api/auth/login", login);
@@ -99,7 +110,7 @@ app.get("/api/card/:cardId", authMiddleware, selectCard);
 app.post("/api/card/update/:cardId", authMiddleware, updateCard);
 app.post("/api/card/delete/:cardId", authMiddleware, deleteCard);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Updated port to avoid conflict with frontend
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
