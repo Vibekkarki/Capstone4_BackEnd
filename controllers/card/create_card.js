@@ -3,7 +3,7 @@ const Board = require("../../models/board");
 const BoardMember = require("../../models/BoardMember");
 
 module.exports = async (req, res) => {
-  const { boardId, title, description, dueDate, position, assign_to } =
+  const { boardId, title, description, dueDate, position, assign_to, checklist } =
     req.body;
 
   if (
@@ -43,6 +43,14 @@ module.exports = async (req, res) => {
       });
     }
 
+    let validatedChecklist = [];
+    if (Array.isArray(checklist)) {
+      validatedChecklist = checklist.map((item) => ({
+        item: item.item,
+        completed: item.completed || false,
+      }));
+    }
+
     // Create and save the card
     const card = new Card({
       board_id: boardId,
@@ -51,6 +59,7 @@ module.exports = async (req, res) => {
       dueDate: dueDate ? new Date(dueDate) : null,
       position,
       assign_to,
+      checklist: validatedChecklist,
     });
 
     await card.save();

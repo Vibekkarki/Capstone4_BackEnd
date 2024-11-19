@@ -4,7 +4,7 @@ const BoardMember = require("../../models/BoardMember");
 
 module.exports = async (req, res) => {
   const { cardId } = req.params;
-  const { title, description, dueDate, assign_to } = req.body;
+  const { title, description, dueDate, assign_to, checklist } = req.body;
 
   if (!title || !description || !assign_to) {
     return res.status(400).json({ msg: "Please provide all required fields" });
@@ -45,6 +45,14 @@ module.exports = async (req, res) => {
     card.description = description ? description : null;
     card.dueDate = dueDate ? new Date(dueDate) : null;
     card.assign_to = assign_to;
+
+    // Update checklist if provided
+    if (Array.isArray(checklist)) {
+      card.checklist = checklist.map((item) => ({
+        item: item.item,
+        completed: item.completed || false,
+      }));
+    }
 
     await card.save();
 

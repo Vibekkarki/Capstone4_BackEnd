@@ -27,6 +27,18 @@ const CardSchema = new mongoose.Schema({
     ref: "User",
     required: false,
   },
+  checklist: [
+    {
+      item: {
+        type: String,
+        required: true,
+      },
+      completed: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
 });
 
 // CardSchema.index({ task_id: 1, position: 1 }, { unique: true });
