@@ -74,6 +74,7 @@ const createCard = require("./controllers/card/create_card");
 const selectCard = require("./controllers/card/select_card");
 const updateCard = require("./controllers/card/update_card");
 const deleteCard = require("./controllers/card/delete_card");
+const updateCardPosition = require("./controllers/card/update_card_position");
 
 // Authentication API
 app.post("/api/auth/register", register);
@@ -109,6 +110,7 @@ app.post("/api/card/create", authMiddleware, createCard);
 app.get("/api/card/:cardId", authMiddleware, selectCard);
 app.post("/api/card/update/:cardId", authMiddleware, updateCard);
 app.post("/api/card/delete/:cardId", authMiddleware, deleteCard);
+app.put('/api/cards/update-position',authMiddleware, updateCardPosition);
 
 const PORT = process.env.PORT || 5000; // Updated port to avoid conflict with frontend
 app.listen(PORT, () => {
