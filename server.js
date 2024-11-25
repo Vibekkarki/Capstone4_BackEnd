@@ -52,10 +52,13 @@ const resetPassword = require("./controllers/auth/reset_password");
 
 //Board Controller
 const getBoards = require("./controllers/board/get_boards");
+const getClosedBoards = require("./controllers/board/get_closed_boards");
 const createBoard = require("./controllers/board/create_board");
 const selectBoard = require("./controllers/board/select_board");
 const updateBoard = require("./controllers/board/update_board");
 const closeBoard = require("./controllers/board/close_board");
+const deleteBoard = require("./controllers/board/delete_board");
+const reopenBoard = require("./controllers/board/reopen_board");
 
 //BoardMember Controller
 const createBoardMember = require("./controllers/boardMember/create_board_member");
@@ -88,10 +91,13 @@ app.get("/api/dashboard", authMiddleware, getDataCount);
 
 // Board API
 app.get("/api/boards", authMiddleware, getBoards);
+app.get("/api/closed-boards", authMiddleware, getClosedBoards);
 app.post("/api/board/create", authMiddleware, createBoard);
 app.get("/api/board/:boardId", authMiddleware, selectBoard);
 app.post("/api/board/update/:boardId", authMiddleware, updateBoard);
 app.post("/api/board/close/:boardId", authMiddleware, closeBoard);
+app.post("/api/board/delete/:boardId", authMiddleware, deleteBoard);
+app.post("/api/board/reopen/:boardId", authMiddleware, reopenBoard);
 
 // BoardMember API
 app.post("/api/board-member/create", authMiddleware, createBoardMember);
@@ -110,7 +116,7 @@ app.post("/api/card/create", authMiddleware, createCard);
 app.get("/api/card/:cardId", authMiddleware, selectCard);
 app.post("/api/card/update/:cardId", authMiddleware, updateCard);
 app.post("/api/card/delete/:cardId", authMiddleware, deleteCard);
-app.put('/api/cards/update-position',authMiddleware, updateCardPosition);
+app.put("/api/cards/update-position", authMiddleware, updateCardPosition);
 
 const PORT = process.env.PORT || 5000; // Updated port to avoid conflict with frontend
 app.listen(PORT, () => {
