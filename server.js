@@ -22,7 +22,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 // CORS Configuration
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://trackitapp-a3098c88d66e.herokuapp.com",
     credentials: true,
   })
 );
@@ -34,7 +34,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "lax",
     },
   })
