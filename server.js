@@ -80,6 +80,9 @@ const deleteCard = require("./controllers/card/delete_card");
 const updateCardPosition = require("./controllers/card/update_card_position");
 const deleteChecklistItem = require("./controllers/card/delete_ChecklistItem");
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the backend!');
+});
 // Authentication API
 app.post("/api/auth/register", register);
 app.post("/api/auth/login", login);
