@@ -5,7 +5,7 @@ const BoardMember = require("../../models/BoardMember");
 module.exports = async (req, res) => {
   const { cardId, newPosition } = req.body;
 
-  if (!cardId || typeof newPosition !== "number" || newPosition < 0 || newPosition > 3) {
+  if (!cardId || typeof newPosition !== "number" || newPosition < 1 || newPosition > 4) {
     return res.status(400).json({ msg: "Invalid card ID or position" });
   }
 
