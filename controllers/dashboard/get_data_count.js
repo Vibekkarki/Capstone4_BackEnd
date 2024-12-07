@@ -1,6 +1,6 @@
 const Task = require("../../models/Task");
 const Card = require("../../models/Card");
-const Board = require("../../models/board");
+const Board = require("../../models/Board");
 const BoardMember = require("../../models/BoardMember");
 const User = require("../../models/user");
 

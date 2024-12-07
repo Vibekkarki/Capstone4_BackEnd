@@ -1,4 +1,4 @@
-const Board = require("../../models/board");
+const Board = require("../../models/Board");
 const User = require("../../models/user");
 module.exports = async (req, res) => {
   const board = await Board.findById(req.params.boardId);

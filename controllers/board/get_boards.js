@@ -1,4 +1,4 @@
-const Board = require("../../models/board");
+const Board = require("../../models/Board");
 const User = require("../../models/user");
 const BoardMember = require("../../models/BoardMember");
 

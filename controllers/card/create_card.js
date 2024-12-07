@@ -1,5 +1,5 @@
 const Card = require("../../models/Card");
-const Board = require("../../models/board");
+const Board = require("../../models/Board");
 const BoardMember = require("../../models/BoardMember");
 
 module.exports = async (req, res) => {
