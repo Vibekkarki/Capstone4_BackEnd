@@ -22,7 +22,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 // CORS Configuration
 app.use(
   cors({
-    origin: "https://trackitapp-a3098c88d66e.herokuapp.com",
+    origin: "https://capstone-project-eight-kappa.vercel.app",
     credentials: true,
   })
 );
