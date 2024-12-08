@@ -5,6 +5,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const boardRoutes = require("./routes/board");
 const app = new express();
+const MongoStore = require('connect-mongo');
 app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 app.use(express.json()); // Add this line to parse JSON bodies
 
@@ -32,9 +33,13 @@ app.use(
     secret: "capstone4_secret_key",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: "mongodb+srv://hpatel3291:hpatel3291@cluster0.7k9yms7.mongodb.net/capstpone_project",
+      collectionName: "sessions",
+    }),
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === "production", // Ensure secure cookies in production
       sameSite: "lax",
     },
   })
