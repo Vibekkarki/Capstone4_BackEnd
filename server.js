@@ -23,7 +23,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 // CORS Configuration
 app.use(
   cors({
-    origin: "https://capstone-project-eight-kappa.vercel.app",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
