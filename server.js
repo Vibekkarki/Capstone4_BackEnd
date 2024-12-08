@@ -28,6 +28,9 @@ app.use(
   })
 );
 
+// Enable trust proxy (Heroku proxy setup)
+app.set("trust proxy", 1);
+
 app.use(
   session({
     secret: "capstone4_secret_key",
@@ -40,7 +43,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Ensure secure cookies in production
-      sameSite: "lax",
+      sameSite: "none",
     },
   })
 );
