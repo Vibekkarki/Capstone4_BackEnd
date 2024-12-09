@@ -6,7 +6,10 @@ module.exports = async (req, res) => {
   const { cardId } = req.params;
 
   try {
-    const card = await Card.findById(cardId).populate("board_id");
+    const card = await Card.findById(cardId).populate(
+      "assign_to",
+      "username email"
+    );
 
     if (!card) {
       return res.status(404).json({ msg: "Card not found" });
