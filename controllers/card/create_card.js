@@ -3,8 +3,15 @@ const Board = require("../../models/Board");
 const BoardMember = require("../../models/BoardMember");
 
 module.exports = async (req, res) => {
-  const { boardId, title, description, dueDate, position, assign_to, checklist } =
-    req.body;
+  const {
+    boardId,
+    title,
+    description,
+    dueDate,
+    position,
+    assign_to,
+    checklist,
+  } = req.body;
 
   if (
     !boardId ||
@@ -32,14 +39,16 @@ module.exports = async (req, res) => {
         .json({ msg: "Not authorized to add cards to this task" });
     }
 
-    const isBoardMember = await BoardMember.exists({
-      board_id: boardId,
-      user_id: assign_to,
-    });
+    const isBoardMemberOrOwner =
+      board.owner_id.equals(assign_to) ||
+      (await BoardMember.exists({
+        board_id: boardId,
+        user_id: assign_to,
+      }));
 
-    if (!isBoardMember) {
+    if (!isBoardMemberOrOwner) {
       return res.status(400).json({
-        msg: "User must be a board member to be assigned to this card.",
+        msg: "User must be the board owner or a board member to be assigned to this card.",
       });
     }
 
