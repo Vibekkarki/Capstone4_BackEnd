@@ -46,7 +46,14 @@ module.exports = async (req, res) => {
       newBoardMember.invite_email = email;
     }
     await newBoardMember.save();
-    await sendInvitationEmail(email, board.name);
+
+    const loginUser = await User.findById(req.session.userId);
+    await sendInvitationEmail(
+      loginUser.email,
+      loginUser.username,
+      email,
+      board.name
+    );
     res
       .status(200)
       .json({ msg: "Board member added successfully.", newBoardMember });
@@ -55,7 +62,12 @@ module.exports = async (req, res) => {
   }
 };
 
-async function sendInvitationEmail(email, boardName) {
+async function sendInvitationEmail(
+  inviterEmail,
+  inviterName,
+  recipientEmail,
+  boardName
+) {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -70,17 +82,44 @@ async function sendInvitationEmail(email, boardName) {
   });
 
   const mailOptions = {
-    from: "hanipatel090@gmail.com",
-    to: email,
-    subject: `Invitation to join board: ${boardName}`,
-    text: `You have been invited to join the board "${boardName}". Please log in to accept this invitation and view the board.`,
-    html: `<p>You have been invited to join the board "<strong>${boardName}</strong>".</p>
-           <p>Please log in to accept this invitation and view the board.</p>`,
+    from: `"SmartBoard Team" <hanipatel090@gmail.com>`, // Professional sender name
+    to: recipientEmail,
+    subject: `You are invited to join the board: ${boardName}`,
+    text: `Hello,
+
+${
+  inviterName || inviterEmail
+} has invited you to join the board "${boardName}" on SmartBoard.
+
+Please log in or create an account to accept this invitation and start collaborating on the board.
+
+Best regards,
+The SmartBoard Team
+`,
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h3 style="color: #0056b3;">Hello,</h3>
+        <p>
+          <strong>${inviterName}</strong> (${inviterEmail}) has invited you to join the board 
+          "<strong>${boardName}</strong>" on SmartBoard.
+        </p>
+        <p>
+          Please log in or create an account to accept this invitation and start collaborating on the board.
+        </p>
+        <p style="font-size: 0.9em; color: #555;">
+          If you have any questions or need assistance, feel free to reach out to us.
+        </p>
+        <p style="margin-top: 20px;">
+          Best regards,<br>
+          <strong>The SmartBoard Team</strong>
+        </p>
+      </div>
+    `,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Invitation email sent to ${email}`);
+    console.log(`Invitation email sent to ${recipientEmail}`);
   } catch (error) {
     console.error("Error sending invitation email:", error);
   }
