@@ -33,13 +33,15 @@ module.exports = async (req, res) => {
       "user_id invite_email"
     );
 
-    const userIds = new Set(
-      boardMembers.map((member) => member.user_id.toString())
-    );
+    // Filter out members who don't have a user_id (i.e., invited but not registered yet)
+    const validMembers = boardMembers.filter((member) => member.user_id);
 
+    const userIds = new Set(
+      validMembers.map((member) => member.user_id.toString())
+    );
     userIds.add(board.owner_id.toString());
 
-    // Fetch emails for all user_ids
+    // Fetch emails for all valid user_ids
     const users = await User.find({ _id: { $in: Array.from(userIds) } }).select(
       "email"
     );
@@ -49,9 +51,10 @@ module.exports = async (req, res) => {
       return map;
     }, {});
 
-    const formattedMembers = boardMembers.map((member) => ({
+    // Prepare the response with user_id and email for registered users only
+    const formattedMembers = validMembers.map((member) => ({
       user_id: member.user_id,
-      email: userMap[member.user_id.toString()] || member.invite_email,
+      email: userMap[member.user_id.toString()],
     }));
 
     if (
